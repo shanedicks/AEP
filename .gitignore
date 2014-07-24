@@ -1,2 +1,3 @@
 DCC/
 *.pyc
+db.sqlite3
