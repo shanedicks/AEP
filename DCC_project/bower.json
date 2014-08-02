@@ -1,17 +1,18 @@
 {
   "name": "DCC_project",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "authors": [
     "Shane Dicks <shane.dicks1@gmail.com>"
   ],
   "description": "Delgado Adult Ed Program Web App for Student and Course management",
-  "main": "./",
+  "main": "manage.py",
   "license": "MIT",
   "private": true,
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
+    "ABE/static/bower_components",
     "test",
     "tests"
   ],
