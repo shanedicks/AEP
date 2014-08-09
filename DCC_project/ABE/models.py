@@ -73,7 +73,7 @@ class Teacher(models.Model):
 	courses = models.ManyToManyField(Course, null=True, blank=True)
 	
 	def __unicode__(self):
-		return unicode(self.user.get_full_name())
+		return self.user.get_full_name()
 
 class Student(models.Model):
 	user = models.OneToOneField(User)
@@ -84,7 +84,7 @@ class Student(models.Model):
 	pathway_id = models.ForeignKey(Pathway, null=True, blank=True)
 	
 	def __unicode__(self):
-		return unicode(self.user.get_full_name())
+		return self.user.get_full_name()
 
 class Availability(models.Model):
 	MONDAY = 'M'
