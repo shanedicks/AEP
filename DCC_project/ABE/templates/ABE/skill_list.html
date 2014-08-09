@@ -1,0 +1,10 @@
+{% extends 'ABE/includes/base.html' %}
+
+	{% block content %}
+		<h2>Skills</h2>
+		<ul>
+			{% for skill in object_list%}
+				<li>{{ skill.title }}</li>
+			{% endfor %}
+		</ul>
+	{% endblock %}

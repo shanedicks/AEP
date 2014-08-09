@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, LiveServerTestCase, Client
 import datetime
 from ABE.models import Session
 
@@ -26,4 +26,13 @@ class SessionTest(TestCase):
 		self.assertEquals(only_session.start_date, session.start_date)
 		self.assertEquals(only_session.end_date, session.end_date)
 
+class AdminTest(LiveServerTestCase):
+	def test_login(self):
+		c = Client()
+
+		response = c.get('/admin/')
+
+		self.assertEquals(response.status_code, 200)
+
+		self.assertTrue('Log in' in response.content)
 		

@@ -2,9 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Session(models.Model):
+	title = models.CharField(max_length=20, null=True, blank=True)
 	start_date = models.DateField()
 	end_date = models.DateField()
 	
+	def __unicode__(self):
+		return self.title
+
 class Resource(models.Model):
 	LESSON = 'L'
 	ASSESSMENT = 'A'
@@ -16,19 +20,28 @@ class Resource(models.Model):
 	)
 	title = models.CharField(max_length=20)
 	description = models.CharField(max_length=250)
-	resource_file = models.FileField(upload_to = 'files')
-	resource_link = models.URLField()
+	resource_file = models.FileField(upload_to = 'files', null=True, blank=True)
+	resource_link = models.URLField(null=True, blank=True)
 	resource_type = models.CharField(max_length=1, choices=RESOURCE_TYPE_CHOICES)
-		
+	
+	def __unicode__(self):
+		return self.title
+
 class Skill(models.Model):
 	title = models.CharField(max_length=20)
-	resources = models.ManyToManyField(Resource)
+	resources = models.ManyToManyField(Resource, null=True, blank=True)
 	
+	def __unicode__(self):
+		return self.title
+
 class Pathway(models.Model):
 	title = models.CharField(max_length=20)
 	description = models.CharField(max_length=250)
-	skills = models.ManyToManyField(Skill)	
+	skills = models.ManyToManyField(Skill,null=True, blank=True)	
 	
+	def __unicode__(self):
+		return self.title
+
 class Course(models.Model):
 	JP = 'JP'
 	WB = 'WB'
@@ -42,28 +55,37 @@ class Course(models.Model):
 		(CP, 'City Park'),
 		(SC, 'Sydney Collier'),
 	)
-	title = models.CharField(max_length=20)
+	title = models.CharField(max_length=50)
 	description = models.CharField(max_length=250)
 	site = models.CharField(max_length=2,
 							choices=SITE_CHOICES
 							)
 	start_time = models.TimeField()
 	end_time = models.TimeField()
-	covered_skills = models.ManyToManyField(Skill)
+	covered_skills = models.ManyToManyField(Skill, null=True, blank=True)
 	session = models.ForeignKey(Session)			
-		
+	
+	def __unicode__(self):
+		return self.title
+
 class Teacher(models.Model):
-	user_id = models.OneToOneField(User)
-	courses = models.ManyToManyField(Course)
+	user = models.OneToOneField(User)
+	courses = models.ManyToManyField(Course, null=True, blank=True)
 	
+	def __unicode__(self):
+		return unicode(self.user.get_full_name())
+
 class Student(models.Model):
-	user_id = models.OneToOneField(User)
-	courses = models.ManyToManyField(Course)
-	mastered_skills = models.ManyToManyField(Skill, related_name='mastered+')
-	in_progress_skills = models.ManyToManyField(Skill, related_name='in progress+')
-	targeted_skills = models.ManyToManyField(Skill, related_name='targeted+')
-	pathway_id = models.ForeignKey(Pathway)
+	user = models.OneToOneField(User)
+	courses = models.ManyToManyField(Course, null=True, blank=True)
+	mastered_skills = models.ManyToManyField(Skill, related_name='mastered+', null=True, blank=True)
+	in_progress_skills = models.ManyToManyField(Skill, related_name='in progress+', null=True, blank=True)
+	targeted_skills = models.ManyToManyField(Skill, related_name='targeted+', null=True, blank=True)
+	pathway_id = models.ForeignKey(Pathway, null=True, blank=True)
 	
+	def __unicode__(self):
+		return unicode(self.user.get_full_name())
+
 class Availability(models.Model):
 	MONDAY = 'M'
 	TUESDAY = 'T'
@@ -79,12 +101,12 @@ class Availability(models.Model):
 		(FRIDAY, 'Friday'),
 		(SATURDAY, 'Saturday'),
 	)
-	user_id = models.ForeignKey(User)
+	user = models.ForeignKey(User)
 	last_updated = models.DateField(auto_now=True)
 	day_of_week = models.CharField(max_length=1, choices=DAY_OF_WEEK_CHOICES)
 	start_busy_time = models.TimeField()
 	stop_busy_time = models.TimeField()
-	
+
 class Attendance(models.Model):
 	session = models.ForeignKey(Session)
 	student_id = models.ForeignKey(Student)
