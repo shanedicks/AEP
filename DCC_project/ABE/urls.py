@@ -9,8 +9,8 @@ urlpatterns = patterns('ABE.views',
 )
 
 urlpatterns += patterns('',
-    url(r'^courses/', CourseList.as_view()),
-    url(r'^students/', StudentList.as_view()),
-    url(r'^teachers/', TeacherList.as_view()),
-    url(r'^skills/', SkillList.as_view()),
+    url(r'^courses/$', CourseList.as_view()),
+    url(r'^students/$', StudentList.as_view()),
+    url(r'^teachers/$', TeacherList.as_view()),
+    url(r'^skills/$', SkillList.as_view()),
 )

@@ -32,6 +32,7 @@ class Migration(SchemaMigration):
         db.create_table(u'ABE_skill', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('title', self.gf('django.db.models.fields.CharField')(max_length=20)),
+            ('description', self.gf('django.db.models.fields.CharField')(max_length=250, null=True, blank=True)),
         ))
         db.send_create_signal(u'ABE', ['Skill'])
 
@@ -64,7 +65,7 @@ class Migration(SchemaMigration):
         # Adding model 'Course'
         db.create_table(u'ABE_course', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=20)),
+            ('title', self.gf('django.db.models.fields.CharField')(max_length=50)),
             ('description', self.gf('django.db.models.fields.CharField')(max_length=250)),
             ('site', self.gf('django.db.models.fields.CharField')(max_length=2)),
             ('start_time', self.gf('django.db.models.fields.TimeField')()),
@@ -85,6 +86,11 @@ class Migration(SchemaMigration):
         # Adding model 'Teacher'
         db.create_table(u'ABE_teacher', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('phone', self.gf('django.db.models.fields.CharField')(max_length=20, null=True, blank=True)),
+            ('alt_phone', self.gf('django.db.models.fields.CharField')(max_length=20, null=True, blank=True)),
+            ('street_address', self.gf('django.db.models.fields.CharField')(max_length=60, null=True, blank=True)),
+            ('city', self.gf('django.db.models.fields.CharField')(max_length=30, null=True, blank=True)),
+            ('state', self.gf('django.db.models.fields.CharField')(max_length=2, null=True, blank=True)),
             ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
         ))
         db.send_create_signal(u'ABE', ['Teacher'])
@@ -101,8 +107,15 @@ class Migration(SchemaMigration):
         # Adding model 'Student'
         db.create_table(u'ABE_student', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('phone', self.gf('django.db.models.fields.CharField')(max_length=20, null=True, blank=True)),
+            ('alt_phone', self.gf('django.db.models.fields.CharField')(max_length=20, null=True, blank=True)),
+            ('street_address', self.gf('django.db.models.fields.CharField')(max_length=60, null=True, blank=True)),
+            ('city', self.gf('django.db.models.fields.CharField')(max_length=30, null=True, blank=True)),
+            ('state', self.gf('django.db.models.fields.CharField')(max_length=2, null=True, blank=True)),
             ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
             ('pathway_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ABE.Pathway'], null=True, blank=True)),
+            ('most_recent_test', self.gf('django.db.models.fields.DateField')(null=True, blank=True)),
+            ('active_hours', self.gf('django.db.models.fields.DecimalField')(max_digits=5, decimal_places=2)),
         ))
         db.send_create_signal(u'ABE', ['Student'])
 
@@ -157,8 +170,8 @@ class Migration(SchemaMigration):
         db.create_table(u'ABE_attendance', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('session', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ABE.Session'])),
-            ('student_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ABE.Student'])),
-            ('course_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ABE.Course'])),
+            ('student', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ABE.Student'])),
+            ('course', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ABE.Course'])),
             ('date', self.gf('django.db.models.fields.DateField')()),
             ('time_in', self.gf('django.db.models.fields.TimeField')()),
             ('time_out', self.gf('django.db.models.fields.TimeField')()),
@@ -168,7 +181,7 @@ class Migration(SchemaMigration):
         # Adding model 'TABE_Score'
         db.create_table(u'ABE_tabe_score', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('student', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ABE.Student'])),
             ('session', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ABE.Session'])),
             ('reading_test', self.gf('django.db.models.fields.CharField')(max_length=2)),
             ('math_test', self.gf('django.db.models.fields.CharField')(max_length=2)),
@@ -180,10 +193,22 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'ABE', ['TABE_Score'])
 
+        # Adding model 'TABE_Class_E_Score'
+        db.create_table(u'ABE_tabe_class_e_score', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('student', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ABE.Student'])),
+            ('session', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ABE.Session'])),
+            ('reading_test', self.gf('django.db.models.fields.CharField')(max_length=2)),
+            ('writing_test', self.gf('django.db.models.fields.CharField')(max_length=2)),
+            ('reading_SS', self.gf('django.db.models.fields.DecimalField')(max_digits=3, decimal_places=0)),
+            ('writing_SS', self.gf('django.db.models.fields.DecimalField')(max_digits=3, decimal_places=0)),
+        ))
+        db.send_create_signal(u'ABE', ['TABE_Class_E_Score'])
+
         # Adding model 'HiSET_Practice_Score'
         db.create_table(u'ABE_hiset_practice_score', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('student', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ABE.Student'])),
             ('session', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['ABE.Session'])),
             ('date', self.gf('django.db.models.fields.DateField')()),
             ('math', self.gf('django.db.models.fields.DecimalField')(max_digits=2, decimal_places=0)),
@@ -251,6 +276,9 @@ class Migration(SchemaMigration):
         # Deleting model 'TABE_Score'
         db.delete_table(u'ABE_tabe_score')
 
+        # Deleting model 'TABE_Class_E_Score'
+        db.delete_table(u'ABE_tabe_class_e_score')
+
         # Deleting model 'HiSET_Practice_Score'
         db.delete_table(u'ABE_hiset_practice_score')
 
@@ -258,11 +286,11 @@ class Migration(SchemaMigration):
     models = {
         u'ABE.attendance': {
             'Meta': {'object_name': 'Attendance'},
-            'course_id': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['ABE.Course']"}),
+            'course': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['ABE.Course']"}),
             'date': ('django.db.models.fields.DateField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'session': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['ABE.Session']"}),
-            'student_id': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['ABE.Student']"}),
+            'student': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['ABE.Student']"}),
             'time_in': ('django.db.models.fields.TimeField', [], {}),
             'time_out': ('django.db.models.fields.TimeField', [], {})
         },
@@ -284,7 +312,7 @@ class Migration(SchemaMigration):
             'session': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['ABE.Session']"}),
             'site': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
             'start_time': ('django.db.models.fields.TimeField', [], {}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '20'})
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '50'})
         },
         u'ABE.hiset_practice_score': {
             'Meta': {'object_name': 'HiSET_Practice_Score'},
@@ -296,7 +324,7 @@ class Migration(SchemaMigration):
             'science': ('django.db.models.fields.DecimalField', [], {'max_digits': '2', 'decimal_places': '0'}),
             'session': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['ABE.Session']"}),
             'social_studies': ('django.db.models.fields.DecimalField', [], {'max_digits': '2', 'decimal_places': '0'}),
-            'user_id': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"}),
+            'student': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['ABE.Student']"}),
             'writing': ('django.db.models.fields.DecimalField', [], {'max_digits': '2', 'decimal_places': '0'})
         },
         u'ABE.pathway': {
@@ -324,19 +352,37 @@ class Migration(SchemaMigration):
         },
         u'ABE.skill': {
             'Meta': {'object_name': 'Skill'},
+            'description': ('django.db.models.fields.CharField', [], {'max_length': '250', 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'resources': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['ABE.Resource']", 'null': 'True', 'blank': 'True'}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '20'})
         },
         u'ABE.student': {
             'Meta': {'object_name': 'Student'},
+            'active_hours': ('django.db.models.fields.DecimalField', [], {'max_digits': '5', 'decimal_places': '2'}),
+            'alt_phone': ('django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
+            'city': ('django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True', 'blank': 'True'}),
             'courses': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['ABE.Course']", 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'in_progress_skills': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'in progress+'", 'null': 'True', 'symmetrical': 'False', 'to': u"orm['ABE.Skill']"}),
             'mastered_skills': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'mastered+'", 'null': 'True', 'symmetrical': 'False', 'to': u"orm['ABE.Skill']"}),
+            'most_recent_test': ('django.db.models.fields.DateField', [], {'null': 'True', 'blank': 'True'}),
             'pathway_id': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['ABE.Pathway']", 'null': 'True', 'blank': 'True'}),
+            'phone': ('django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
+            'state': ('django.db.models.fields.CharField', [], {'max_length': '2', 'null': 'True', 'blank': 'True'}),
+            'street_address': ('django.db.models.fields.CharField', [], {'max_length': '60', 'null': 'True', 'blank': 'True'}),
             'targeted_skills': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'targeted+'", 'null': 'True', 'symmetrical': 'False', 'to': u"orm['ABE.Skill']"}),
             'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'})
+        },
+        u'ABE.tabe_class_e_score': {
+            'Meta': {'object_name': 'TABE_Class_E_Score'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'reading_SS': ('django.db.models.fields.DecimalField', [], {'max_digits': '3', 'decimal_places': '0'}),
+            'reading_test': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
+            'session': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['ABE.Session']"}),
+            'student': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['ABE.Student']"}),
+            'writing_SS': ('django.db.models.fields.DecimalField', [], {'max_digits': '3', 'decimal_places': '0'}),
+            'writing_test': ('django.db.models.fields.CharField', [], {'max_length': '2'})
         },
         u'ABE.tabe_score': {
             'Meta': {'object_name': 'TABE_Score'},
@@ -349,12 +395,17 @@ class Migration(SchemaMigration):
             'reading_ge': ('django.db.models.fields.DecimalField', [], {'max_digits': '3', 'decimal_places': '1'}),
             'reading_test': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
             'session': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['ABE.Session']"}),
-            'user_id': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
+            'student': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['ABE.Student']"})
         },
         u'ABE.teacher': {
             'Meta': {'object_name': 'Teacher'},
+            'alt_phone': ('django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
+            'city': ('django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True', 'blank': 'True'}),
             'courses': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['ABE.Course']", 'null': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'phone': ('django.db.models.fields.CharField', [], {'max_length': '20', 'null': 'True', 'blank': 'True'}),
+            'state': ('django.db.models.fields.CharField', [], {'max_length': '2', 'null': 'True', 'blank': 'True'}),
+            'street_address': ('django.db.models.fields.CharField', [], {'max_length': '60', 'null': 'True', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'})
         },
         u'auth.group': {

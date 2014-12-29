@@ -1,10 +1,14 @@
 {% extends 'ABE/includes/base.html' %}
 
 	{% block content %}
-		<h2>Skills</h2>
+		<h1>Skills</h1>
+		{% if object_list %}
 		<ul>
 			{% for skill in object_list%}
 				<li>{{ skill.title }}</li>
 			{% endfor %}
 		</ul>
+		{% else %}
+			<p>There are no Skills listed</p>
+		{% endif %}
 	{% endblock %}

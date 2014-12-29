@@ -6,13 +6,13 @@ from ABE.models import Course, Student, Teacher, Skill
 
 # Create your views here.
 def home(request):
-	return HttpResponse('This is a temporary placeholder for the home page')
+	return render(request, 'ABE/home.html')
 
 def schedule(request):
-	return HttpResponse('This is a temporary placeholder for the schedule view')
+	return render(request, 'ABE/schedule.html')
 
 def calendar(request):
-	return HttpResponse('This is a temporary placeholder for the calendar view')
+	return render(request, 'ABE/calendar.html')
 
 class CourseList(generic.ListView):
 	template_name = 'ABE/course_list.html'
@@ -22,9 +22,17 @@ class StudentList(generic.ListView):
 	template_name = 'ABE/student_list.html'
 	model = Student
 
+class StudentDetail(generic.DetailView):
+	template_name = 'ABE/student_profile.html'
+	model = Student	
+
 class TeacherList(generic.ListView):
 	template_name = 'ABE/teacher_list.html'
 	model = Teacher
+
+class TeacherDetail(generic.DetailView):
+	template_name = 'ABE/teacher_profile.html'
+	model = Teacher	
 
 class SkillList(generic.ListView):
 	template_name = 'ABE/skill_list.html'
