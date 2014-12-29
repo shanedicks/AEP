@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from ABE.views import CourseList, StudentList, TeacherList, SkillList
+from ABE import views
 
 urlpatterns = patterns('ABE.views',
 	url(r'^$', 'home'),
@@ -9,8 +9,10 @@ urlpatterns = patterns('ABE.views',
 )
 
 urlpatterns += patterns('',
-    url(r'^courses/$', CourseList.as_view()),
-    url(r'^students/$', StudentList.as_view()),
-    url(r'^teachers/$', TeacherList.as_view()),
-    url(r'^skills/$', SkillList.as_view()),
+    url(r'^courses/$', views.CourseList.as_view()),
+    url(r'^students/$', views.StudentList.as_view()),
+    url(r'^students/(?P<pk>\d+)/$', views.StudentDetail.as_view()),
+    url(r'^teachers/$', views.TeacherList.as_view()),
+    url(r'^teachers/(?P<pk>\d+)/$', views.TeacherDetail.as_view()),    
+    url(r'^skills/$', views.SkillList.as_view()),
 )
