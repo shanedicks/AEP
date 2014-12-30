@@ -1,14 +1,16 @@
 {% extends 'ABE/includes/base.html' %}
 
 	{% block content %}
+		<div class="container">
 		<h1>Students</h1>
 		{% if object_list %}
 		<ul>
 			{% for student in object_list %}
-				<li>{{ student }}</li>
+				<li><a href="{{ student.get_absolute_url }}">{{ student }}</a></li>
 			{% endfor %}
 		</ul>
 		{% else %}
 			<p> There are no Students </p>
 		{% endif %}
+		</div>
 	{% endblock %}

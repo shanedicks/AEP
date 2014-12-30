@@ -1,4 +1,9 @@
 {% extends 'ABE/includes/base.html' %}
 	{% block content %}
-		<h1>{{ Teacher }}</h1>
+	<div class="container">
+		<h1>{{ teacher }}</h1>
+		<h4>Contact</h4>
+			<p>Email: {{ teacher.user.email }}</p>
+			<p>Phone: {{ teacher.phone }}
+	</div>
 	{% endblock %}

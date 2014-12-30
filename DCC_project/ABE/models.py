@@ -70,6 +70,7 @@ class Course(models.Model):
 	
 	def __unicode__(self):
 		return self.title
+
 class Person(models.Model):
 	phone = models.CharField(max_length=20, null=True, blank=True)
 	alt_phone = models.CharField(max_length=20, null=True, blank=True)
@@ -89,7 +90,7 @@ class Teacher(Person):
 	courses = models.ManyToManyField(Course, null=True, blank=True)
 
 	def get_absolute_url(self):
-		return "/teachers/%s/" % (self.user.id)
+		return "/teachers/%s/" % (self.id)
 
 class Student(Person):
 	user = models.OneToOneField(User)
@@ -102,7 +103,7 @@ class Student(Person):
 	active_hours = models.DecimalField(max_digits=5, decimal_places=2)
 
 	def get_absolute_url(self):
-		return "students/%s/" % (self.user.id)
+		return "/students/%s/" % (self.id)
 
 class Availability(models.Model):
 	MONDAY = 'M'
